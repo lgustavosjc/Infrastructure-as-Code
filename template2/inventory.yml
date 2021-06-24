@@ -1,0 +1,10 @@
+local:
+   vars:
+      var_do_inventory: 'Inv-Var'
+      lista_do_inventory:
+        - "Fiat"
+        - "VW"
+        - "Ford" 
+   hosts:
+     127.0.0.1:
+        datacenter: primario

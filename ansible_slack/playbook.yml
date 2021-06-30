@@ -1,0 +1,43 @@
+- hosts: remoto
+  gather_facts: False
+
+  tasks:
+  - name: Git Clone do projeto e salva em opt
+    ansible.builtin.git:
+      repo: 'https://github.com/LeonardoDG2084/iaac_slacko-api.git'
+      dest: /opt/slacko-api
+      version: master
+  
+  - name: Instalando MongoDB
+    apt:
+      name: mongodb
+      update_cache: yes
+      state: present
+    register: var_mongodb
+    notify: 
+        - enable mongodb
+
+  - name: Habilita e Inicia o MongoDBb
+    systemd:
+       state: started
+       name: mongodb
+       enabled: yes
+
+
+  - name: Instala os requisitos do Python
+    pip:
+      requirements: /opt/slacko-api/requeriments.txt
+  
+  - name: Criando o serviço
+    copy:
+      src: slacko-api.service
+      dest: /etc/systemd/system
+      owner: root
+      group: root
+
+  - name: Iniciando o slacko-api
+    ansible.builtin.service:
+      name: slacko-api
+      state: started
+      enabled: yes
+
